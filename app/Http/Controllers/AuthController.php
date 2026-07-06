@@ -6,21 +6,16 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    // =========================
-    // TAMPILKAN FORM REGISTER
-    // =========================
+    // Tampilkan form register
     public function registerView()
     {
         return view('register');
     }
 
-    // =========================
-    // PROSES REGISTER
-    // =========================
+    // Proses register
     public function register(Request $request)
     {
         $request->validate([
@@ -35,20 +30,16 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect('/login')->with('success', 'Register berhasil, silakan login');
+        return redirect()->route('login')->with('success', 'Register berhasil, silakan login');
     }
 
-    // =========================
-    // TAMPILKAN FORM LOGIN
-    // =========================
+    // Tampilkan form login
     public function loginView()
     {
         return view('login');
     }
 
-    // =========================
-    // PROSES LOGIN
-    // =========================
+    // Proses login
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -58,7 +49,8 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+
+            return redirect()->route('dashboard');
         }
 
         return back()->withErrors([
@@ -66,9 +58,7 @@ class AuthController extends Controller
         ])->withInput();
     }
 
-    // =========================
-    // LOGOUT
-    // =========================
+    // Logout
     public function logout(Request $request)
     {
         Auth::logout();
@@ -76,6 +66,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login')->with('success', 'Berhasil logout');
+        return redirect()->route('login')->with('success', 'Berhasil logout');
     }
 }
