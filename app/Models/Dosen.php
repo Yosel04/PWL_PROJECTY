@@ -9,6 +9,7 @@ class Dosen extends Model
     protected $table = 'table_dosen';
 
     protected $fillable = [
+        'user_id',
         'Fullname',
         'NIP',
         'NIDN',
@@ -18,6 +19,11 @@ class Dosen extends Model
         'Tanggal_Lahir',
         'Alamat',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     public function jurusan()
     {

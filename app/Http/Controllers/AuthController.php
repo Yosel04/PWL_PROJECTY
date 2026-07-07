@@ -9,13 +9,11 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Tampilkan form register
     public function registerView()
     {
         return view('register');
     }
 
-    // Proses register
     public function register(Request $request)
     {
         $request->validate([
@@ -27,19 +25,18 @@ class AuthController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'role' => 'mahasiswa',
             'password' => Hash::make($request->password),
         ]);
 
         return redirect()->route('login')->with('success', 'Register berhasil, silakan login');
     }
 
-    // Tampilkan form login
     public function loginView()
     {
         return view('login');
     }
 
-    // Proses login
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -50,6 +47,20 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
+            $user = Auth::user();
+
+            if ($user->role === 'admin') {
+                return redirect()->route('dashboard');
+            }
+
+            if ($user->role === 'mahasiswa') {
+                return redirect()->route('mahasiswa.krs.index');
+            }
+
+            if ($user->role === 'dosen') {
+                return redirect()->route('dosen.krs.index');
+            }
+
             return redirect()->route('dashboard');
         }
 
@@ -58,7 +69,6 @@ class AuthController extends Controller
         ])->withInput();
     }
 
-    // Logout
     public function logout(Request $request)
     {
         Auth::logout();

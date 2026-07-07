@@ -20,15 +20,13 @@ class Kelas extends Model
         'semester'
     ];
 
-    // Relasi ke dosen
     public function dosen()
     {
         return $this->belongsTo(Dosen::class, 'kode_dosen');
     }
 
-    // Relasi ke mata kuliah
     public function matakuliah()
     {
-        return $this->belongsTo(Matakuliah::class, 'kode_mata_kuliah');
+        return $this->belongsTo(MataKuliah::class, 'kode_mata_kuliah');
     }
 }

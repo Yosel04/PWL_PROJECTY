@@ -13,6 +13,16 @@ class Krs extends Model
         'tahun_ajaran',
         'semester',
         'status',
-        'total_sks'
+        'total_sks',
     ];
+
+    public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class, 'kode_mahasiswa');
+    }
+
+    public function details()
+    {
+        return $this->hasMany(KrsDetail::class, 'kode_krs');
+    }
 }

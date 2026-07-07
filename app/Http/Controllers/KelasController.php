@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Kelas;
 use App\Models\Dosen;
-use App\Models\Matakuliah;
+use App\Models\MataKuliah;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
 {
-    // Halaman index
     public function index()
     {
         $kelas = Kelas::with(['dosen', 'matakuliah'])->get();
@@ -17,19 +16,14 @@ class KelasController extends Controller
         return view('kelas.index', compact('kelas'));
     }
 
-    // Halaman form tambah
     public function create()
     {
         $dosen = Dosen::all();
-        $matakuliah = Matakuliah::all();
+        $matakuliah = MataKuliah::all();
 
-        return view('kelas.create', compact(
-            'dosen',
-            'matakuliah'
-        ));
+        return view('kelas.create', compact('dosen', 'matakuliah'));
     }
 
-    // Simpan data
     public function store(Request $request)
     {
         $request->validate([
@@ -60,7 +54,6 @@ class KelasController extends Controller
             ->with('success', 'Data kelas berhasil ditambahkan');
     }
 
-    // Hapus kelas
     public function destroy($id)
     {
         Kelas::findOrFail($id)->delete();

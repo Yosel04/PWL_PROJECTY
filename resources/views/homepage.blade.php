@@ -6,8 +6,6 @@
     <title>Dashboard Sistem Akademik</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
@@ -31,6 +29,11 @@
 
             --icon-bg: linear-gradient(135deg, #60a5fa, #2563eb);
             --icon-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
+
+            --stat-card-bg: #f8fbff;
+            --stat-card-border: #dbeafe;
+            --stat-icon-bg: linear-gradient(135deg, #3b82f6, #2563eb);
+            --footer-bg: transparent;
         }
 
         html[data-theme="dark"] {
@@ -53,6 +56,11 @@
 
             --icon-bg: linear-gradient(135deg, #3b82f6, #1d4ed8);
             --icon-shadow: 0 10px 24px rgba(30, 64, 175, 0.35);
+
+            --stat-card-bg: #243244;
+            --stat-card-border: #334155;
+            --stat-icon-bg: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            --footer-bg: transparent;
         }
 
         body {
@@ -195,11 +203,14 @@
         }
 
         .feature-card p,
-        .dashboard-desc {
+        .dashboard-desc,
+        .section-subtitle,
+        .stat-label,
+        .quick-action-desc,
+        .footer-text {
             color: var(--text-muted) !important;
         }
 
-        /* HEADER CARD: logo + judul sejajar */
         .feature-header {
             display: flex;
             align-items: center;
@@ -207,7 +218,6 @@
             margin-bottom: 18px;
         }
 
-        /* icon biru di card */
         .feature-icon {
             width: 58px;
             height: 58px;
@@ -226,7 +236,6 @@
             line-height: 1;
         }
 
-        /* JUDUL CARD DIBESARIN DIKIT */
         .feature-title {
             font-size: 1.25rem;
             font-weight: 700;
@@ -239,6 +248,102 @@
             max-width: 100%;
             height: auto;
             object-fit: cover;
+        }
+
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: #e0edff;
+            color: #1d4ed8;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        html[data-theme="dark"] .role-badge {
+            background: #1e3a8a;
+            color: #dbeafe;
+        }
+
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+
+        .stats-card {
+            background: var(--stat-card-bg);
+            border: 1px solid var(--stat-card-border);
+            border-radius: 20px;
+            padding: 20px;
+            height: 100%;
+            box-shadow: 0 10px 24px var(--shadow-color);
+            transition: .25s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stats-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .stats-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: var(--stat-icon-bg);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.25rem;
+            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.20);
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 1.9rem;
+            font-weight: 800;
+            line-height: 1;
+            color: var(--text-main);
+            margin-bottom: 0;
+        }
+
+        .quick-action-card {
+            background: var(--bg-card-soft);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 24px var(--shadow-color);
+        }
+
+        .quick-action-buttons .btn {
+            min-width: 170px;
+        }
+
+        .footer-custom {
+            margin-top: 42px;
+            padding: 24px 0 36px;
+            background: var(--footer-bg);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-title {
+            color: var(--text-main);
+            font-weight: 700;
+            margin-bottom: 4px;
         }
 
         @media (max-width: 992px) {
@@ -291,6 +396,10 @@
             .feature-title {
                 font-size: 1.08rem;
             }
+
+            .quick-action-buttons .btn {
+                width: 100%;
+            }
         }
 
         @media (max-width: 576px) {
@@ -301,6 +410,10 @@
             .feature-title {
                 font-size: 1.02rem;
                 line-height: 1.35;
+            }
+
+            .stat-value {
+                font-size: 1.55rem;
             }
         }
     </style>
@@ -344,6 +457,7 @@
                     <a class="nav-link active" href="{{ route('dashboard') }}">Home</a>
                 </li>
 
+                @auth
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle"
                        href="#"
@@ -354,15 +468,26 @@
                     </a>
 
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ route('dosen.index') }}">Dosen</a></li>
-                        <li><a class="dropdown-item" href="{{ route('mahasiswa.index') }}">Mahasiswa</a></li>
-                        <li><a class="dropdown-item" href="{{ route('jurusan.index') }}">Jurusan</a></li>
-                        <li><a class="dropdown-item" href="{{ route('matakuliah.index') }}">Mata Kuliah</a></li>
-                        <li><a class="dropdown-item" href="{{ route('kelas.index') }}">Kelas</a></li>
-                        <li><a class="dropdown-item" href="{{ route('krs.index') }}">KRS</a></li>
-                        <li><a class="dropdown-item" href="{{ route('krsdetail.index') }}">KRS Detail</a></li>
+                        @if(Auth::user()->role === 'admin')
+                            <li><a class="dropdown-item" href="{{ route('dosen.index') }}">Dosen</a></li>
+                            <li><a class="dropdown-item" href="{{ route('mahasiswa.index') }}">Mahasiswa</a></li>
+                            <li><a class="dropdown-item" href="{{ route('jurusan.index') }}">Jurusan</a></li>
+                            <li><a class="dropdown-item" href="{{ route('matakuliah.index') }}">Mata Kuliah</a></li>
+                            <li><a class="dropdown-item" href="{{ route('kelas.index') }}">Kelas</a></li>
+                            <li><a class="dropdown-item" href="{{ route('krs.index') }}">KRS</a></li>
+                            <li><a class="dropdown-item" href="{{ route('krsdetail.index') }}">KRS Detail</a></li>
+                        @endif
+
+                        @if(Auth::user()->role === 'mahasiswa')
+                            <li><a class="dropdown-item" href="{{ route('mahasiswa.krs.index') }}">KRS Saya</a></li>
+                        @endif
+
+                        @if(Auth::user()->role === 'dosen')
+                            <li><a class="dropdown-item" href="{{ route('dosen.krs.index') }}">Approval KRS</a></li>
+                        @endif
                     </ul>
                 </li>
+                @endauth
 
                 <li class="nav-item ms-lg-3 theme-toggle-wrap">
                     <button type="button" id="themeToggle" class="theme-toggle-btn">
@@ -409,18 +534,284 @@
 <div class="container py-5">
     <div class="card main-card shadow border-0 rounded-4">
         <div class="card-body p-5">
-            <h1 class="fw-bold mb-3">Dashboard Sistem Akademik</h1>
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-3">
+                <div>
+                    <h1 class="fw-bold mb-2">Dashboard Sistem Akademik</h1>
 
+                    @auth
+                        <p class="dashboard-desc mb-0">
+                            Selamat datang, <strong>{{ Auth::user()->name }}</strong>. Silakan gunakan menu akademik sesuai role akun Anda.
+                        </p>
+                    @else
+                        <p class="dashboard-desc mb-0">
+                            Selamat datang di dashboard sistem akademik. Login untuk mengakses fitur sesuai peran pengguna.
+                        </p>
+                    @endauth
+                </div>
+
+                @auth
+                    <div class="role-badge">
+                        <i class="bi bi-person-badge-fill"></i>
+                        {{ ucfirst(Auth::user()->role) }}
+                    </div>
+                @endauth
+            </div>
+
+            {{-- DASHBOARD KHUSUS SAAT LOGIN --}}
             @auth
-                <p class="dashboard-desc mb-4">
-                    Selamat datang, <strong>{{ Auth::user()->name }}</strong>. Silakan pilih menu akademik dari navbar di atas.
-                </p>
-            @else
-                <p class="dashboard-desc mb-4">
-                    Selamat datang di dashboard sistem akademik. Untuk mengakses menu dosen, mahasiswa, jurusan, mata kuliah, kelas, KRS, dan KRS detail, silakan login terlebih dahulu.
-                </p>
+                {{-- ADMIN --}}
+                @if(Auth::user()->role === 'admin')
+                    <div class="mt-4">
+                        <h4 class="section-title">Ringkasan Admin</h4>
+                        <p class="section-subtitle mb-4">Statistik data akademik dan status pengajuan KRS.</p>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6 col-xl-3">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">Total Dosen</p>
+                                            <h3 class="stat-value">{{ $stats['total_dosen'] ?? 0 }}</h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-person-workspace"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-xl-3">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">Total Mahasiswa</p>
+                                            <h3 class="stat-value">{{ $stats['total_mahasiswa'] ?? 0 }}</h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-mortarboard-fill"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-xl-3">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">Total Kelas</p>
+                                            <h3 class="stat-value">{{ $stats['total_kelas'] ?? 0 }}</h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-door-open-fill"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-xl-3">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">Total KRS</p>
+                                            <h3 class="stat-value">{{ $stats['total_krs'] ?? 0 }}</h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-journal-text"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">KRS Pending</p>
+                                            <h3 class="stat-value">{{ $stats['krs_pending'] ?? 0 }}</h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-hourglass-split"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">KRS Approved</p>
+                                            <h3 class="stat-value">{{ $stats['krs_approved'] ?? 0 }}</h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">KRS Declined</p>
+                                            <h3 class="stat-value">{{ $stats['krs_declined'] ?? 0 }}</h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-x-circle-fill"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quick-action-card mb-4">
+                            <h5 class="fw-bold mb-2">Quick Action Admin</h5>
+                            <p class="quick-action-desc mb-3">Akses cepat ke menu pengelolaan utama.</p>
+
+                            <div class="d-flex flex-wrap gap-2 quick-action-buttons">
+                                <a href="{{ route('mahasiswa.index') }}" class="btn btn-primary rounded-3">Kelola Mahasiswa</a>
+                                <a href="{{ route('dosen.index') }}" class="btn btn-outline-primary rounded-3">Kelola Dosen</a>
+                                <a href="{{ route('kelas.index') }}" class="btn btn-outline-primary rounded-3">Kelola Kelas</a>
+                                <a href="{{ route('krs.index') }}" class="btn btn-outline-primary rounded-3">Lihat Data KRS</a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- MAHASISWA --}}
+                @if(Auth::user()->role === 'mahasiswa')
+                    @php
+                        $krsTerakhir = $stats['krs_terakhir'] ?? null;
+                    @endphp
+
+                    <div class="mt-4">
+                        <h4 class="section-title">Ringkasan Mahasiswa</h4>
+                        <p class="section-subtitle mb-4">Pantau pengajuan KRS Anda dengan lebih cepat.</p>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">Total Pengajuan KRS</p>
+                                            <h3 class="stat-value">{{ $stats['total_krs'] ?? 0 }}</h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-journal-plus"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">Status KRS Terakhir</p>
+                                            <h3 class="stat-value" style="font-size: 1.25rem;">
+                                                {{ $krsTerakhir ? ucfirst($krsTerakhir->status) : '-' }}
+                                            </h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-clipboard-check-fill"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">Total SKS KRS Terakhir</p>
+                                            <h3 class="stat-value">
+                                                {{ $krsTerakhir ? $krsTerakhir->total_sks : 0 }}
+                                            </h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-book-half"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quick-action-card mb-4">
+                            <h5 class="fw-bold mb-2">Quick Action Mahasiswa</h5>
+                            <p class="quick-action-desc mb-3">Kelola pengajuan KRS Anda dari sini.</p>
+
+                            <div class="d-flex flex-wrap gap-2 quick-action-buttons">
+                                <a href="{{ route('mahasiswa.krs.index') }}" class="btn btn-primary rounded-3">KRS Saya</a>
+                                <a href="{{ route('mahasiswa.krs.create') }}" class="btn btn-outline-primary rounded-3">Buat KRS Baru</a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- DOSEN --}}
+                @if(Auth::user()->role === 'dosen')
+                    <div class="mt-4">
+                        <h4 class="section-title">Ringkasan Dosen</h4>
+                        <p class="section-subtitle mb-4">Pantau proses approval KRS mahasiswa.</p>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">KRS Pending</p>
+                                            <h3 class="stat-value">{{ $stats['krs_pending'] ?? 0 }}</h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-hourglass-split"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">KRS Approved</p>
+                                            <h3 class="stat-value">{{ $stats['krs_approved'] ?? 0 }}</h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="stats-top">
+                                        <div>
+                                            <p class="stat-label">KRS Declined</p>
+                                            <h3 class="stat-value">{{ $stats['krs_declined'] ?? 0 }}</h3>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="bi bi-x-circle-fill"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quick-action-card mb-4">
+                            <h5 class="fw-bold mb-2">Quick Action Dosen</h5>
+                            <p class="quick-action-desc mb-3">Masuk ke halaman approval KRS mahasiswa.</p>
+
+                            <div class="d-flex flex-wrap gap-2 quick-action-buttons">
+                                <a href="{{ route('dosen.krs.index') }}" class="btn btn-primary rounded-3">Approval KRS</a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             @endauth
 
+            {{-- GUEST / INFO UMUM --}}
             <div class="row g-4 mt-2">
                 <div class="col-md-4">
                     <div class="card feature-card rounded-4 h-100">
@@ -448,7 +839,7 @@
                                 <h5 class="feature-title">Akses Menu Cepat</h5>
                             </div>
                             <p class="mb-0">
-                                Gunakan menu dropdown di navbar untuk langsung membuka halaman data yang dibutuhkan.
+                                Setiap role memiliki akses menu yang berbeda, admin untuk kelola data, mahasiswa untuk KRS, dan dosen untuk approval KRS.
                             </p>
                         </div>
                     </div>
@@ -461,10 +852,10 @@
                                 <div class="feature-icon">
                                     <i class="bi bi-shield-lock-fill"></i>
                                 </div>
-                                <h5 class="feature-title">Sistem Login</h5>
+                                <h5 class="feature-title">Sistem Login Multi Role</h5>
                             </div>
                             <p class="mb-0">
-                                Halaman dashboard bisa diakses umum, tetapi menu data akademik hanya bisa dibuka setelah login.
+                                Sistem mendukung role admin, mahasiswa, dan dosen dengan hak akses dashboard yang berbeda.
                             </p>
                         </div>
                     </div>
@@ -486,6 +877,15 @@
         </div>
     </div>
 </div>
+
+<footer class="footer-custom">
+    <div class="container text-center">
+        <div class="footer-title">Sistem Akademik ITBSS</div>
+        <div class="footer-text">
+            Project Pemrograman Web Lanjut • © {{ date('Y') }}
+        </div>
+    </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

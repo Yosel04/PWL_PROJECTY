@@ -13,4 +13,14 @@ class KrsDetail extends Model
         'kode_kelas',
         'status'
     ];
+
+    public function krs()
+    {
+        return $this->belongsTo(Krs::class, 'kode_krs');
+    }
+
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'kode_kelas');
+    }
 }
