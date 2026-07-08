@@ -87,6 +87,16 @@ Route::middleware(['auth', 'role:mahasiswa'])
         Route::get('/krs/create', [MahasiswaKrsController::class, 'create'])->name('krs.create');
         Route::post('/krs', [MahasiswaKrsController::class, 'store'])->name('krs.store');
         Route::get('/krs/{id}', [MahasiswaKrsController::class, 'show'])->name('krs.show');
+
+        // detail / isi KRS mahasiswa
+        Route::get('/krs/{id}/detail/create', [MahasiswaKrsController::class, 'createDetail'])
+            ->name('krs.detail.create');
+
+        Route::post('/krs/{id}/detail', [MahasiswaKrsController::class, 'storeDetail'])
+            ->name('krs.detail.store');
+
+        Route::delete('/krs/{krsId}/detail/{detailId}', [MahasiswaKrsController::class, 'destroyDetail'])
+            ->name('krs.detail.destroy');
     });
 
 /*

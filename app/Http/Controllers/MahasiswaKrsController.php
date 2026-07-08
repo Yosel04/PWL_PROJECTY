@@ -131,7 +131,9 @@ class MahasiswaKrsController extends Controller
                 ->with('error', 'KRS yang sudah diproses dosen tidak bisa ditambah kelas lagi.');
         }
 
-        $kelasDipilih = KrsDetail::where('kode_krs', $krs->id)->pluck('kode_kelas')->toArray();
+        $kelasDipilih = KrsDetail::where('kode_krs', $krs->id)
+            ->pluck('kode_kelas')
+            ->toArray();
 
         $kelasList = Kelas::with(['matakuliah', 'dosen'])
             ->whereNotIn('id', $kelasDipilih)

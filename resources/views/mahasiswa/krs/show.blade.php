@@ -4,7 +4,7 @@
 <div class="container py-4">
     <div class="bg-white rounded-4 shadow p-4">
 
-        <div class="d-flex justify-content-between align-items-start mb-4">
+        <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
             <div>
                 <h1 class="fw-bold mb-1">Detail KRS Mahasiswa</h1>
                 <p class="text-muted mb-0">Detail pengajuan KRS dan daftar kelas yang dipilih</p>

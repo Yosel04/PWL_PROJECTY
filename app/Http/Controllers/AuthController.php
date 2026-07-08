@@ -44,29 +44,16 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            $user = Auth::user();
-
-            if ($user->role === 'admin') {
-                return redirect()->route('dashboard');
-            }
-
-            if ($user->role === 'mahasiswa') {
-                return redirect()->route('mahasiswa.krs.index');
-            }
-
-            if ($user->role === 'dosen') {
-                return redirect()->route('dosen.krs.index');
-            }
-
-            return redirect()->route('dashboard');
+        if (!Auth::attempt($credentials)) {
+            return back()->withErrors([
+                'email' => 'Email atau password salah.',
+            ])->withInput();
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->withInput();
+        $request->session()->regenerate();
+
+        // Semua role diarahkan ke dashboard dulu
+        return redirect()->route('dashboard');
     }
 
     public function logout(Request $request)
